@@ -1,0 +1,23 @@
+version: "3.7"
+
+services:
+    logstash:
+      image: docker.elastic.co/logstash/logstash:7.12.1
+      container_name: logstash
+      environment:
+           XPACK_MONITORING_ENABLED: "false"
+      volumes:
+        - ./config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
+        - ./config/pipelines:/usr/share/logstash/config/pipelines:ro
+        - ./logs:/usr/share/logstash/input
+      ports:
+        - 5046:5046
+      networks:
+       - logger_server
+
+networks:
+  logger_server:
+    driver: bridge
+
+volumes:
+  logstash_data:   
