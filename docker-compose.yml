@@ -10,7 +10,7 @@ services:
         - ./config/pipelines.yml:/usr/share/logstash/config/pipelines.yml:ro
         - ./config/pipelines:/usr/share/logstash/config/pipelines:ro
         - ./logs:/usr/share/logstash/input
-        - ./output/result.log:/usr/share/logstash/output/result.log
+        - ./output:/usr/share/logstash/output
       ports:
         - 5046:5046
       networks:
