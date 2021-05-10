@@ -1,7 +1,21 @@
 version: "3.7"
 
 services:
-    logstash:
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:7.12.1
+    container_name: filebeat
+    user: root
+    networks:
+      - logger_server
+    configs:
+      - source: fb_config
+        target: /usr/share/filebeat/filebeat.yml
+    volumes:
+      - filebeat:/usr/share/filebeat/data
+      - ./test_log_filebeat:/var/log/:ro
+    
+
+  logstash:
       image: docker.elastic.co/logstash/logstash:7.12.1
       container_name: logstash
       environment:
@@ -21,4 +35,10 @@ networks:
     driver: bridge
 
 volumes:
-  logstash_data:   
+  filebeat:
+  logstash_data:
+
+
+configs:
+  fb_config:
+    file: $PWD/filebeat/filebeat.yml   
