@@ -3,15 +3,13 @@ version: "3.7"
 services:
   filebeat:
     image: docker.elastic.co/beats/filebeat:7.12.1
+    command: filebeat -e -strict.perms=false
     container_name: filebeat
-    user: root
     networks:
       - logger_server
-    configs:
-      - source: fb_config
-        target: /usr/share/filebeat/filebeat.yml
     volumes:
       - filebeat:/usr/share/filebeat/data
+      - ./filebeat_config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
       - ./test_log_filebeat:/var/log/:ro
     
 
@@ -29,6 +27,8 @@ services:
         - 5046:5046
       networks:
        - logger_server
+      links:
+        - filebeat 
 
 networks:
   logger_server:
@@ -37,8 +37,4 @@ networks:
 volumes:
   filebeat:
   logstash_data:
-
-
-configs:
-  fb_config:
-    file: $PWD/filebeat/filebeat.yml   
+  
